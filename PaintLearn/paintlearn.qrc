@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/PaintLearn">
+        <file>Resources/mouse.png</file>
+        <file>Resources/pen.png</file>
+        <file>Resources/text.png</file>
+        <file>Resources/trashcan.png</file>
+    </qresource>
+</RCC>
