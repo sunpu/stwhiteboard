@@ -1,5 +1,5 @@
-#include "stwhiteboardpaintlearn.h"
-#include "stwhiteboardnetworkclient.h"
+#include "stwhiteboard.h"
+#include "stwbnetworkclient.h"
 #include <QApplication>
 
 using namespace tahiti;
@@ -7,10 +7,10 @@ using namespace tahiti;
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	PaintLearn w;
+	STWhiteBoard w;
 
 	w.show();
-	STWhiteBoardNetworkClient* client = new STWhiteBoardNetworkClient();
+	STWBNetworkClient* client = new STWBNetworkClient();
 
 	return a.exec();
 }

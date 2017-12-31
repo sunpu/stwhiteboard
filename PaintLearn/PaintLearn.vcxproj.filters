@@ -41,75 +41,105 @@
     <ClCompile Include="GeneratedFiles\qrc_paintlearn.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="stwhiteboardnetworkclient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_stwhiteboardnetworkclient.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_stwbnetworkclient.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_stwhiteboardnetworkclient.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_stwbnetworkclient.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_stwhiteboardpaintlearn.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_stwbview.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_stwhiteboardpaintlearn.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_stwbview.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_stwhiteboardview.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_stwbvtoolbar.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_stwhiteboardview.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_stwbvtoolbar.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="stwhiteboarditem.cpp">
+    <ClCompile Include="stwbpathitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stwhiteboardpaintlearn.cpp">
+    <ClCompile Include="stwbnetworkclient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stwhiteboardscene.cpp">
+    <ClCompile Include="stwbscene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stwhiteboardtextitem.cpp">
+    <ClCompile Include="stwbtextitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stwhiteboardview.cpp">
+    <ClCompile Include="stwbview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stwbvtoolbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_stwhiteboard.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_stwhiteboard.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="stwhiteboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="paintlearn.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="paintlearn.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="stwhiteboardnetworkclient.h">
+    <CustomBuild Include="stwbnetworkclient.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="stwhiteboardpaintlearn.h">
+    <CustomBuild Include="stwbview.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="stwhiteboardview.h">
+    <CustomBuild Include="stwbvtoolbar.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="STWBVToolbar.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="STWBPenStylePanel.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="STWBTextStylePanel.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="STWhiteBoard.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="stwhiteboard.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GeneratedFiles\ui_paintlearn.h">
+    <ClInclude Include="stwbconst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stwbpathitem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stwbscene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stwbtextitem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_STWBVToolbar.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="stwhiteboardconst.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GeneratedFiles\ui_STWBPenStylePanel.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="stwhiteboarditem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GeneratedFiles\ui_STWBTextStylePanel.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="stwhiteboardscene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stwhiteboardtextitem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GeneratedFiles\ui_STWhiteBoard.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
