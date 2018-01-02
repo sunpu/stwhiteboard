@@ -5,8 +5,8 @@
 
 using namespace tahiti;
 
-STWBTextItem::STWBTextItem(QGraphicsItem *parent)
-	:QGraphicsTextItem(parent)
+STWBTextItem::STWBTextItem(int itemID)
+	:m_itemID(itemID)
 {
 	setFlags(QGraphicsItem::ItemIsMovable |
 		QGraphicsItem::ItemIsFocusable |
@@ -14,12 +14,12 @@ STWBTextItem::STWBTextItem(QGraphicsItem *parent)
 	setTextInteractionFlags(Qt::TextEditorInteraction);
 }
 
-void STWBTextItem::focusOutEvent(QFocusEvent * event)
+void STWBTextItem::focusOutEvent(QFocusEvent* event)
 {
 	setTextInteractionFlags(Qt::NoTextInteraction);
 }
 
-void STWBTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void STWBTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
 	setTextInteractionFlags(Qt::TextEditorInteraction);
 	setFocus();

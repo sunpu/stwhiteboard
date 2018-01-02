@@ -68,6 +68,7 @@ namespace tahiti
 		void changePenShowColor(QString color);
 		void changeTextShowColor(QString color);
 		int getCurrentSelect() { return m_currentSelect; }
+		void init();
 	protected:
 		bool eventFilter(QObject* watched, QEvent* e);
 		public slots:

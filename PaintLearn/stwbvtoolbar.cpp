@@ -345,6 +345,14 @@ void STWBVToolbar::on_pbDelete_clicked()
 	Q_EMIT deleteAction();
 }
 
+void STWBVToolbar::init()
+{
+	m_currentSelect = 0;
+	ui.widSelect->setStyleSheet("");
+	ui.widPen->setStyleSheet("");
+	ui.widText->setStyleSheet("");
+}
+
 bool STWBVToolbar::eventFilter(QObject* watched, QEvent* e)
 {
 	// 鼠标进入或离开关闭按钮时设置为不同状态的图标

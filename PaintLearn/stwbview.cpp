@@ -6,8 +6,8 @@
 
 using namespace tahiti;
 
-STWBView::STWBView(QWidget *parent)
-	: QGraphicsView(parent)
+STWBView::STWBView(STWBNetworkClient* network)
+	: m_network(network)
 {
 	setInteractive(true);
 	setOptimizationFlag(QGraphicsView::IndirectPainting);
@@ -20,7 +20,7 @@ STWBView::STWBView(QWidget *parent)
 	setStyleSheet("background: transparent;border:0px");
 
 	//init scene
-	m_scene = new STWBScene;
+	m_scene = new STWBScene(network);
 	setScene(m_scene);
 	setSceneRect(0, 0, 600, 600);
 	resize(600, 600);
@@ -31,7 +31,7 @@ STWBView::~STWBView()
 
 }
 
-void STWBView::setPenColor(QColor color)
+void STWBView::setPenColor(QString color)
 {
 	m_scene->setPenColor(color);
 }
@@ -41,7 +41,7 @@ void STWBView::setPenThickness(int width)
 	m_scene->setPenThickness(width);
 }
 
-void STWBView::setTextColor(QColor color)
+void STWBView::setTextColor(QString color)
 {
 	m_scene->setTextColor(color);
 }
@@ -69,12 +69,12 @@ void STWBView::setScene(STWBScene *scene)
 	m_scene = scene;
 }
 
-void STWBView::deleteSlectedItem()
+void STWBView::deleteSelectedItem()
 {
-	m_scene->deleteSlectedItem();
+	m_scene->deleteSelectedItem();
 }
 
 void STWBView::clearSelection()
 {
-	m_scene->clearSelection();
+	m_scene->clearStatus();
 }

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QGraphicsView>
 #include "stwbconst.h"
+#include "stwbnetworkclient.h"
 
 namespace tahiti
 {
@@ -13,25 +14,26 @@ namespace tahiti
 		Q_OBJECT
 
 	public:
-		STWBView(QWidget *parent = 0);
+		STWBView(STWBNetworkClient* network);
 		~STWBView();
 
 		STWBScene* getScene() { return m_scene; }
 		void setScene(STWBScene* scene);
 		void setMode(STWBActionType type);
-		void setPenColor(QColor color);
+		void setPenColor(QString color);
 		void setPenThickness(int width);
-		void setTextColor(QColor color);
+		void setTextColor(QString color);
 		void setTextSize(int size);
-		void deleteSlectedItem();
+		void deleteSelectedItem();
 		void clearSelection();
 	protected:
 		void resizeEvent(QResizeEvent* event);
-	private:
-		STWBScene* m_scene;
 	Q_SIGNALS:
 		void slideChangedBefore(void);
 		void slideChangedAfter(void);
+	private:
+		STWBScene* m_scene;
+		STWBNetworkClient* m_network;
 	};
 }
 #endif

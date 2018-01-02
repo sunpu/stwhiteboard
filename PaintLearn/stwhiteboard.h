@@ -7,13 +7,13 @@
 #include "ui_STWhiteBoard.h"
 #include "stwbview.h"
 #include "stwbvtoolbar.h"
+#include "stwbnetworkclient.h"
 
 namespace tahiti
 {
 	class STWhiteBoard : public QMainWindow
 	{
 		Q_OBJECT
-
 	public:
 		STWhiteBoard(QWidget *parent = 0);
 		~STWhiteBoard();
@@ -28,6 +28,7 @@ namespace tahiti
 		void hideStylePanels();
 		void showPenStylePanel();
 		void showTextStylePanel();
+		void connectNetworkServer();
 	protected:
 		bool eventFilter(QObject* watched, QEvent* e);
 		void resizeEvent(QResizeEvent* size);
@@ -38,6 +39,7 @@ namespace tahiti
 		STWBVToolbar* m_vtoolbar;
 		STWBPenStylePanel* m_penStylePanel;
 		STWBTextStylePanel* m_textStylePanel;
+		STWBNetworkClient* m_network;
 	};
 }
 #endif

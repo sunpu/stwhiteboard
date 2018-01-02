@@ -11,25 +11,27 @@ namespace tahiti
 	class STWBPathItem : public QGraphicsPathItem
 	{
 	public:
-		STWBPathItem(QGraphicsItem* parent = 0);
+		STWBPathItem(int itemID);
 
-		void setColor(QColor color);
+		void setColor(QString color);
 		void setThickness(int thickcness);
 
-		QColor color() { return m_color; }
+		QString color() { return m_color; }
 		int thickness() { return m_thickness; }
+		int itemID() { return m_itemID; }
 
 		void render(void);
-		std::vector<QPointF> points(void) { return m_listPoints; }
-		void addPoint(const QPointF& pt)
+		QVector<QPoint> points(void) { return m_listPoints; }
+		void addPoint(const QPoint& pt)
 		{
 			m_listPoints.push_back(pt);
 		}
 	private:
-		std::vector<QPointF> m_listPoints;
-		QColor m_color;
+		QVector<QPoint> m_listPoints;
+		QString m_color;
 		int m_thickness;
 		STWBActionType m_type;
+		int m_itemID;
 	};
 }
 #endif

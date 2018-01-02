@@ -5,14 +5,14 @@
 
 using namespace tahiti;
 
-STWBPathItem::STWBPathItem(QGraphicsItem *parent)
-	:QGraphicsPathItem(parent)
+STWBPathItem::STWBPathItem(int itemID)
+	:m_itemID(itemID)
 {
 	setFlag(QGraphicsItem::ItemIsMovable, true);
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
 
-void STWBPathItem::setColor(QColor color)
+void STWBPathItem::setColor(QString color)
 {
 	m_color = color;
 }
@@ -33,6 +33,6 @@ void STWBPathItem::render()
 		path.lineTo(m_listPoints[i]);
 	}
 
-	this->setPen(QPen(QBrush(color()), (qreal)thickness(), Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	this->setPen(QPen(QBrush(QColor(m_color)), (qreal)m_thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 	this->setPath(path);
 }

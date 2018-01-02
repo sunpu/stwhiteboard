@@ -7,10 +7,12 @@ STWhiteBoard::STWhiteBoard(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	m_view = new STWBView(this);
-	//setCentralWidget(view);
+	m_network = new STWBNetworkClient();
+	connect(m_network, SIGNAL(onConnect()), this, SLOT(connectNetworkServer()));
+	m_network->connectServer("10.1.0.10", "10001");
+
+	m_view = new STWBView(m_network);
 	ui.centralWidget->layout()->addWidget(m_view);
-	//ui.centralWidget->setStyleSheet("QWidget#centralWidget {background-color: #2e3037;}");
 	ui.centralWidget->installEventFilter(this);
 
 	m_vtoolbar = new STWBVToolbar(this);
@@ -39,10 +41,19 @@ STWhiteBoard::STWhiteBoard(QWidget *parent)
 
 	m_penStylePanel->init();
 	m_textStylePanel->init();
+	m_vtoolbar->init();
 }
 
 STWhiteBoard::~STWhiteBoard()
 {
+	m_network->disconnectServer();
+}
+
+void STWhiteBoard::connectNetworkServer()
+{
+	m_network->createClient("teacher");
+	m_network->createCourse("course-1");
+	m_network->joinCourse("course-1");
 }
 
 void STWhiteBoard::hideStylePanels()
@@ -79,7 +90,7 @@ void STWhiteBoard::setActionMode(int mode)
 
 void STWhiteBoard::deleteAction()
 {
-	m_view->deleteSlectedItem();
+	m_view->deleteSelectedItem();
 }
 
 void STWhiteBoard::setPenThickness(int thickness)
@@ -94,8 +105,7 @@ void STWhiteBoard::setPenThickness(int thickness)
 
 void STWhiteBoard::setPenColor(QString color)
 {
-	QColor penColor(color);
-	m_view->setPenColor(penColor);
+	m_view->setPenColor(color);
 	m_vtoolbar->changePenShowColor(color);
 	hideStylePanels();
 	if (m_vtoolbar->getCurrentSelect() != 2)
@@ -116,8 +126,7 @@ void STWhiteBoard::setTextSize(int size)
 
 void STWhiteBoard::setTextColor(QString color)
 {
-	QColor textColor(color);
-	m_view->setTextColor(textColor);
+	m_view->setTextColor(color);
 	m_vtoolbar->changeTextShowColor(color);
 	hideStylePanels();
 	if (m_vtoolbar->getCurrentSelect() != 3)

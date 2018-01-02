@@ -1,7 +1,7 @@
 #ifndef STWBSCENE_H
 #define STWBSCENE_H
 
-#include <QPointF>
+#include <QPoint>
 #include <QGraphicsScene>
 #include <QObject>
 #include <QMap>
@@ -9,12 +9,13 @@
 #include <QGraphicsSceneMouseEvent>
 #include "stwbpathitem.h"
 #include "stwbtextitem.h"
+#include "stwbnetworkclient.h"
 
 namespace tahiti
 {
 	struct PathItemData
 	{
-		QPointF prePoint;
+		QPoint prePoint;
 		std::vector<QGraphicsItem*> tempDrawingItem;
 		STWBPathItem* pathItem;
 		PathItemData()
@@ -27,33 +28,43 @@ namespace tahiti
 	class STWBScene : public QGraphicsScene
 	{
 	public:
-		STWBScene(QObject* parent = 0);
+		STWBScene(STWBNetworkClient* network);
 
 		void setMode(STWBActionType type);
-		void setPenColor(QColor color);
+		void setPenColor(QString color);
 		void setPenThickness(int w);
-		void setTextColor(QColor color);
+		void setTextColor(QString color);
 		void setTextSize(int size);
-		void onPenDown(QPointF pt, int id = 0);
-		void onPenMove(QPointF pt, int id = 0);
+		void onPenDown(QPoint pt, int id = 0);
+		void onPenMove(QPoint pt, int id = 0);
 		void onPenUp(int id = 0);
-		void deleteSlectedItem();
+		void deleteSelectedItem();
+		void clearStatus();
 	protected:
 		void mousePressEvent(QGraphicsSceneMouseEvent *event);
 		void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 		void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 		void keyPressEvent(QKeyEvent *event);
 		void drawStart(PathItemData* dt);
-		void drawTo(PathItemData* dt, const QPointF& to);
+		void drawTo(PathItemData* dt, const QPoint& to);
+	private:
+		void removeEmptyTextItem();
+		private Q_SLOTS:
+		void drawRemotePenItem(QString color, int thickness, QVector<QPoint> points);
+		void drawRemotePenItem1();
 	private:
 		STWBActionType m_type;
-		QColor m_pen_color;
+		QString m_pen_color;
 		int m_pen_thickness;
-		QColor m_text_color;
+		QString m_text_color;
 		int m_text_size;
 		bool m_isDrawing;
 		PathItemData* m_pathItemData;
 		STWBTextItem* m_textItem;
+		STWBTextItem* m_last_textItem;
+		STWBNetworkClient* m_network;
+		int m_itemID_index;
+		STWBPathItem* m_remotePathItem;
 	};
 }
 #endif
