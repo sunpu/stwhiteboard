@@ -348,6 +348,7 @@ void STWBVToolbar::on_pbDelete_clicked()
 void STWBVToolbar::init()
 {
 	m_currentSelect = 0;
+	Q_EMIT setActionMode(m_currentSelect);
 	ui.widSelect->setStyleSheet("");
 	ui.widPen->setStyleSheet("");
 	ui.widText->setStyleSheet("");

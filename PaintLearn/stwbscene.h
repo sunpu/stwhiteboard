@@ -25,6 +25,7 @@ namespace tahiti
 		}
 	};
 
+	class STWBTextItem;
 	class STWBScene : public QGraphicsScene
 	{
 	public:
@@ -40,18 +41,21 @@ namespace tahiti
 		void onPenUp(int id = 0);
 		void deleteSelectedItem();
 		void clearStatus();
+		void drawRemoteRealtimePen(QString color, int thickness, QVector<QPoint> points);
+		void drawLocalTextItem(QString content, QPoint pos, int itemID);
+		void drawRemotePenItem(QString color, int thickness, QVector<QPoint> points, int itemID);
+		void drawRemoteTextItem(QString color, int size, QString content, QPoint pos, int itemID);
+		void moveRemoteItems(QPoint pos, int itemID);
+		void deleteRemoteItems(QList<int> itemIDs);
 	protected:
-		void mousePressEvent(QGraphicsSceneMouseEvent *event);
-		void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-		void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-		void keyPressEvent(QKeyEvent *event);
+		void mousePressEvent(QGraphicsSceneMouseEvent* event);
+		void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+		void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+		void keyPressEvent(QKeyEvent* event);
 		void drawStart(PathItemData* dt);
 		void drawTo(PathItemData* dt, const QPoint& to);
 	private:
 		void removeEmptyTextItem();
-		private Q_SLOTS:
-		void drawRemotePenItem(QString color, int thickness, QVector<QPoint> points);
-		void drawRemotePenItem1();
 	private:
 		STWBActionType m_type;
 		QString m_pen_color;
@@ -64,7 +68,11 @@ namespace tahiti
 		STWBTextItem* m_last_textItem;
 		STWBNetworkClient* m_network;
 		int m_itemID_index;
+		PathItemData* m_realtimePathItemData;
 		STWBPathItem* m_remotePathItem;
+		STWBTextItem* m_remoteTextItem;
+		QMap<int, QGraphicsItem*> m_itemMap;
+		QVector<QPoint> m_realtimePoints;
 	};
 }
 #endif

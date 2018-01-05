@@ -29,6 +29,12 @@ namespace tahiti
 		void showPenStylePanel();
 		void showTextStylePanel();
 		void connectNetworkServer();
+		void drawRemoteRealtimePen(QString color, int thickness, QVector<QPoint> points);
+		void drawRemotePenItem(QString color, int thickness, QVector<QPoint> points, int itemID);
+		void drawRemoteTextItem(QString color, int size, QString content, QPoint pos, int itemID);
+		void moveRemoteItems(QPoint pos, int itemID);
+		void deleteRemoteItems(QList<int> itemIDs);
+		void editableAuthority(QString editable);
 	protected:
 		bool eventFilter(QObject* watched, QEvent* e);
 		void resizeEvent(QResizeEvent* size);

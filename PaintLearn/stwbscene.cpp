@@ -7,14 +7,12 @@ STWBScene::STWBScene(STWBNetworkClient* network)
 {
 	m_isDrawing = false;
 
+	m_realtimePathItemData = NULL;
 	m_pathItemData = NULL;
 	m_textItem = NULL;
 	m_last_textItem = NULL;
 
 	m_itemID_index = 0;
-	//connect(m_network, SIGNAL(drawPenItem(QString, int, QVector<QPoint>)),
-	//	this, SLOT(drawRemotePenItem(QString, int, QVector<QPoint>)));
-	//connect(m_network, SIGNAL(drawPenItem1()), this, SLOT(drawRemotePenItem1()));
 }
 
 void STWBScene::setMode(STWBActionType type)
@@ -86,7 +84,7 @@ void STWBScene::onPenMove(QPoint pt, int id)
 
 void STWBScene::onPenUp(int id)
 {
-	for (size_t i = 0; i < m_pathItemData->tempDrawingItem.size(); i++)
+	for (int i = 0; i < m_pathItemData->tempDrawingItem.size(); i++)
 	{
 		QGraphicsScene::removeItem(m_pathItemData->tempDrawingItem[i]);
 	}
@@ -96,9 +94,10 @@ void STWBScene::onPenUp(int id)
 	m_pathItemData->pathItem->setThickness(m_pen_thickness);
 	m_pathItemData->pathItem->render();
 	QGraphicsScene::addItem(m_pathItemData->pathItem);
+	m_itemMap[m_pathItemData->pathItem->itemID()] = m_pathItemData->pathItem;
 
-	m_network->drawPenItem(m_pathItemData->pathItem->itemID(),
-		m_pen_color, m_pen_thickness, m_pathItemData->pathItem->points());
+	m_network->drawPenItem(m_pen_color, m_pen_thickness,
+		m_pathItemData->pathItem->points(), m_pathItemData->pathItem->itemID());
 }
 
 void STWBScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -107,6 +106,8 @@ void STWBScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 	{
 		m_isDrawing = true;
 		onPenDown(event->scenePos().toPoint());
+		m_realtimePoints.clear();
+		m_realtimePoints.append(event->scenePos().toPoint());
 	}
 	else if (m_type == STWBActionType::Text)
 	{
@@ -122,7 +123,6 @@ void STWBScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			}
 		}
 		m_textItem = new STWBTextItem(m_itemID_index++);
-		connect(m_textItem, SIGNAL(removeMe()), this, SLOT(removeEmptyTextItem()));
 		m_textItem->setDefaultTextColor(m_text_color);
 		m_textItem->setPlainText(QString::fromLocal8Bit(""));
 		QFont font = m_textItem->font();
@@ -132,6 +132,7 @@ void STWBScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 		m_textItem->setFocus();
 		m_textItem->setPos(event->scenePos().toPoint());
 		QGraphicsScene::addItem(m_textItem);
+		m_itemMap[m_textItem->itemID()] = m_textItem;
 	}
 	else if (m_type == STWBActionType::Select)
 	{
@@ -148,6 +149,13 @@ void STWBScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	if (m_isDrawing)
 	{
 		onPenMove(event->scenePos().toPoint());
+		if (m_realtimePoints.size() == 10)
+		{
+			QVector<QPoint> tmpPoints = m_realtimePoints;
+			m_network->drawRealtimePenItem(m_pen_color, m_pen_thickness, tmpPoints);
+			m_realtimePoints.clear();
+		}
+		m_realtimePoints.append(event->scenePos().toPoint());
 	}
 	QGraphicsScene::mouseMoveEvent(event);
 }
@@ -156,8 +164,30 @@ void STWBScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	if (m_isDrawing)
 	{
+		QVector<QPoint> tmpPoints = m_realtimePoints;
+		m_network->drawRealtimePenItem(m_pen_color, m_pen_thickness, tmpPoints);
+		m_realtimePoints.clear();
 		m_isDrawing = false;
 		onPenUp();
+	}
+	if (m_type == STWBActionType::Select)
+	{
+		QMap<int, QGraphicsItem*>::iterator it;
+		QGraphicsItem* item;
+		int itemID = 0;
+		for (int i = 0; i < selectedItems().size(); i++)
+		{
+			item = selectedItems().at(i);
+			for (it = m_itemMap.begin(); it != m_itemMap.end(); it++)
+			{
+				if (it.value() == item)
+				{
+					itemID = it.key();
+					break;
+				}
+			}
+			m_network->moveItem(item->pos().toPoint(), itemID);
+		}
 	}
 	QGraphicsScene::mouseReleaseEvent(event);
 }
@@ -174,14 +204,34 @@ void STWBScene::keyPressEvent(QKeyEvent *event)
 	}
 }
 
+void STWBScene::drawLocalTextItem(QString content, QPoint pos, int itemID)
+{
+	m_network->drawTextItem(m_text_color, m_text_size, content, pos, itemID);
+}
+
 void STWBScene::deleteSelectedItem()
 {
 	// 移除所有选中的 items
+	int itemID = 0;
+	QGraphicsItem* item;
+	QMap<int, QGraphicsItem*>::iterator it;
+	QList<int> itemIDs;
 	while (!selectedItems().isEmpty())
 	{
-		removeItem(selectedItems().front());
+		item = selectedItems().front();
+		for (it = m_itemMap.begin(); it != m_itemMap.end(); it++)
+		{
+			if (it.value() == item)
+			{
+				itemIDs.append(it.key());
+				break;
+			}
+		}
+		removeItem(item);
 	}
+	m_network->deleteItems(itemIDs);
 }
+
 void STWBScene::clearStatus()
 {
 	clearSelection();
@@ -197,8 +247,32 @@ void STWBScene::removeEmptyTextItem()
 	}
 }
 
-void STWBScene::drawRemotePenItem(QString color, int thickness, QVector<QPoint> points)
+void STWBScene::drawRemoteRealtimePen(QString color, int thickness, QVector<QPoint> points)
 {
+	if (points.size() == 0)
+	{
+		return;
+	}
+	if (m_realtimePathItemData == NULL)
+	{
+		m_realtimePathItemData = new PathItemData;
+		m_realtimePathItemData->prePoint = points[0];
+		drawStart(m_realtimePathItemData);
+		drawRemoteRealtimePen(color, thickness, points);
+	}
+	else
+	{
+		for (int i = 0; i < points.size(); i++)
+		{
+			drawTo(m_realtimePathItemData, points[i]);
+			m_realtimePathItemData->prePoint = points[i];
+		}
+	}
+}
+
+void STWBScene::drawRemotePenItem(QString color, int thickness, QVector<QPoint> points, int itemID)
+{
+	m_itemID_index = itemID;
 	m_remotePathItem = new STWBPathItem(m_itemID_index++);
 	m_remotePathItem->setColor(color);
 	m_remotePathItem->setThickness(thickness);
@@ -208,9 +282,52 @@ void STWBScene::drawRemotePenItem(QString color, int thickness, QVector<QPoint> 
 	}
 	m_remotePathItem->render();
 	QGraphicsScene::addItem(m_remotePathItem);
+	m_itemMap[itemID] = m_remotePathItem;
+
+	if (m_realtimePathItemData != NULL)
+	{
+		for (int i = 0; i < m_realtimePathItemData->tempDrawingItem.size(); i++)
+		{
+			QGraphicsScene::removeItem(m_realtimePathItemData->tempDrawingItem[i]);
+		}
+
+		m_realtimePathItemData->tempDrawingItem.clear();
+		delete(m_realtimePathItemData);
+		m_realtimePathItemData = NULL;
+	}
 }
 
-void STWBScene::drawRemotePenItem1()
+void STWBScene::drawRemoteTextItem(QString color, int size, QString content, QPoint pos, int itemID)
 {
-	printf("123");
+	if (m_itemMap.contains(itemID))
+	{
+		m_remoteTextItem = (STWBTextItem *)m_itemMap[itemID];
+	}
+	else
+	{
+		m_itemID_index = itemID;
+		m_remoteTextItem = new STWBTextItem(m_itemID_index++);
+		QGraphicsScene::addItem(m_remoteTextItem);
+		m_itemMap[itemID] = m_remoteTextItem;
+	}
+	m_remoteTextItem->setDefaultTextColor(color);
+	m_remoteTextItem->setPlainText(content);
+	QFont font = m_remoteTextItem->font();
+	font.setPixelSize(size);
+	m_remoteTextItem->setFont(font);
+	m_remoteTextItem->setPos(pos);
+}
+
+void STWBScene::moveRemoteItems(QPoint pos, int itemID)
+{
+	m_itemMap[itemID]->setPos(pos);
+}
+
+void STWBScene::deleteRemoteItems(QList<int> itemIDs)
+{
+	for (int i = 0; i < itemIDs.size(); i++)
+	{
+		QGraphicsScene::removeItem(m_itemMap[itemIDs[i]]);
+		m_itemMap.remove(itemIDs[i]);
+	}
 }

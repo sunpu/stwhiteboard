@@ -6,7 +6,7 @@
 using namespace tahiti;
 
 STWBTextItem::STWBTextItem(int itemID)
-	:m_itemID(itemID)
+	: m_itemID(itemID)
 {
 	setFlags(QGraphicsItem::ItemIsMovable |
 		QGraphicsItem::ItemIsFocusable |
@@ -17,6 +17,13 @@ STWBTextItem::STWBTextItem(int itemID)
 void STWBTextItem::focusOutEvent(QFocusEvent* event)
 {
 	setTextInteractionFlags(Qt::NoTextInteraction);
+	QString content = this->toPlainText();
+	if (content.size() == 0)
+	{
+		return;
+	}
+	QPoint pos = this->pos().toPoint();
+	((STWBScene*)scene())->drawLocalTextItem(content, pos, m_itemID);
 }
 
 void STWBTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)

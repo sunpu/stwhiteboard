@@ -7,8 +7,22 @@ STWhiteBoard::STWhiteBoard(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	qRegisterMetaType<QVector<QPoint>>("QVector<QPoint>");
+	qRegisterMetaType<QPoint>("QPoint");
+	qRegisterMetaType<QList<int>>("QList<int>");
+
 	m_network = new STWBNetworkClient();
 	connect(m_network, SIGNAL(onConnect()), this, SLOT(connectNetworkServer()));
+	connect(m_network, SIGNAL(drawRemoteRealtimePen(QString, int, QVector<QPoint>)),
+		this, SLOT(drawRemoteRealtimePen(QString, int, QVector<QPoint>)));
+	connect(m_network, SIGNAL(drawRemotePenItem(QString, int, QVector<QPoint>, int)),
+		this, SLOT(drawRemotePenItem(QString, int, QVector<QPoint>, int)));
+	connect(m_network, SIGNAL(drawRemoteTextItem(QString, int, QString, QPoint, int)),
+		this, SLOT(drawRemoteTextItem(QString, int, QString, QPoint, int)));
+	connect(m_network, SIGNAL(moveRemoteItems(QPoint, int)), this, SLOT(moveRemoteItems(QPoint, int)));
+	connect(m_network, SIGNAL(deleteRemoteItems(QList<int>)), this, SLOT(deleteRemoteItems(QList<int>)));
+	connect(m_network, SIGNAL(editableAuthority()), this, SLOT(editableAuthority()));	
+
 	m_network->connectServer("10.1.0.10", "10001");
 
 	m_view = new STWBView(m_network);
@@ -152,4 +166,52 @@ void STWhiteBoard::resizeEvent(QResizeEvent* size)
 	m_vtoolbar->move(QPoint(toolbarX, toolbarY));
 	m_penStylePanel->move(QPoint(toolbarX + m_vtoolbar->width(), toolbarY));
 	m_textStylePanel->move(QPoint(toolbarX + m_vtoolbar->width(), toolbarY + 52));
+}
+
+void STWhiteBoard::drawRemoteRealtimePen(QString color, int thickness, QVector<QPoint> points)
+{
+	setPenColor(color);
+	setPenThickness(thickness);
+	m_view->drawRemoteRealtimePen(color, thickness, points);
+}
+
+void STWhiteBoard::drawRemotePenItem(QString color, int thickness, QVector<QPoint> points, int itemID)
+{
+	setPenColor(color);
+	setPenThickness(thickness);
+	m_view->drawRemotePenItem(color, thickness, points, itemID);
+}
+
+void STWhiteBoard::drawRemoteTextItem(QString color, int size, QString content, QPoint pos, int itemID)
+{
+	setTextColor(color);
+	setTextSize(size);
+	m_view->drawRemoteTextItem(color, size, content, pos, itemID);
+}
+
+void STWhiteBoard::moveRemoteItems(QPoint pos, int itemID)
+{
+	m_view->moveRemoteItems(pos, itemID);
+}
+
+void STWhiteBoard::deleteRemoteItems(QList<int> itemIDs)
+{
+	m_view->deleteRemoteItems(itemIDs);
+}
+
+void STWhiteBoard::editableAuthority(QString editable)
+{
+	m_vtoolbar->init();
+	if (editable == "True")
+	{
+		m_penStylePanel->show();
+		m_textStylePanel->show();
+		m_vtoolbar->show();
+	}
+	else
+	{
+		m_penStylePanel->hide();
+		m_textStylePanel->hide();
+		m_vtoolbar->hide();
+	}
 }

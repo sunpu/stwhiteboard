@@ -24,11 +24,14 @@ void STWBPathItem::setThickness(int thickcness)
 
 void STWBPathItem::render()
 {
-	if (m_listPoints.size() < 1) return;
+	if (m_listPoints.size() < 1)
+	{
+		return;
+	}
 
 	QPainterPath path;
 	path.moveTo(m_listPoints[0]);
-	for (size_t i = 1; i < m_listPoints.size(); i++)
+	for (int i = 1; i < m_listPoints.size(); i++)
 	{
 		path.lineTo(m_listPoints[i]);
 	}

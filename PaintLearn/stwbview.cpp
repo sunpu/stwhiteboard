@@ -78,3 +78,28 @@ void STWBView::clearSelection()
 {
 	m_scene->clearStatus();
 }
+
+void STWBView::drawRemoteRealtimePen(QString color, int thickness, QVector<QPoint> points)
+{
+	m_scene->drawRemoteRealtimePen(color, thickness, points);
+}
+
+void STWBView::drawRemotePenItem(QString color, int thickness, QVector<QPoint> points, int itemID)
+{
+	m_scene->drawRemotePenItem(color, thickness, points, itemID);
+}
+
+void STWBView::drawRemoteTextItem(QString color, int size, QString content, QPoint pos, int itemID)
+{
+	m_scene->drawRemoteTextItem(color, size, content, pos, itemID);
+}
+
+void STWBView::moveRemoteItems(QPoint pos, int itemID)
+{
+	m_scene->moveRemoteItems(pos, itemID);
+}
+
+void STWBView::deleteRemoteItems(QList<int> itemIDs)
+{
+	m_scene->deleteRemoteItems(itemIDs);
+}

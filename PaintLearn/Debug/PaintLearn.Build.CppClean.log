@@ -11,8 +11,8 @@ e:\source\softterminal\stwhiteboard\paintlearn\debug\moc_stwhiteboard.obj
 e:\source\softterminal\stwhiteboard\paintlearn\debug\moc_stwbvtoolbar.obj
 e:\source\softterminal\stwhiteboard\paintlearn\debug\moc_stwbview.obj
 e:\source\softterminal\stwhiteboard\paintlearn\debug\moc_stwbnetworkclient.obj
-e:\source\softterminal\stwhiteboard\paintlearn\debug\qrc_paintlearn.obj
 e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\ui_stwhiteboard.h
+e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\debug\moc_stwbvtoolbar.cpp
 e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\debug\moc_stwbnetworkclient.cpp
 e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\debug\moc_stwhiteboard.cpp
 e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\debug\moc_stwbview.cpp
@@ -20,16 +20,9 @@ e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\qrc_paintlearn.cpp
 e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\ui_stwbvtoolbar.h
 e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\ui_stwbpenstylepanel.h
 e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\ui_stwbtextstylepanel.h
-e:\source\softterminal\stwhiteboard\paintlearn\generatedfiles\debug\moc_stwbvtoolbar.cpp
-e:\source\softterminal\stwhiteboard\win32\debug\paintlearn.ilk
-e:\source\softterminal\stwhiteboard\win32\debug\paintlearn.exe
-e:\source\softterminal\stwhiteboard\win32\debug\paintlearn.pdb
 e:\source\softterminal\stwhiteboard\paintlearn\debug\paintlearn.tlog\cl.command.1.tlog
 e:\source\softterminal\stwhiteboard\paintlearn\debug\paintlearn.tlog\cl.read.1.tlog
 e:\source\softterminal\stwhiteboard\paintlearn\debug\paintlearn.tlog\cl.write.1.tlog
 e:\source\softterminal\stwhiteboard\paintlearn\debug\paintlearn.tlog\custombuild.command.1.tlog
 e:\source\softterminal\stwhiteboard\paintlearn\debug\paintlearn.tlog\custombuild.read.1.tlog
 e:\source\softterminal\stwhiteboard\paintlearn\debug\paintlearn.tlog\custombuild.write.1.tlog
-e:\source\softterminal\stwhiteboard\paintlearn\debug\paintlearn.tlog\link.command.1.tlog
-e:\source\softterminal\stwhiteboard\paintlearn\debug\paintlearn.tlog\link.read.1.tlog
-e:\source\softterminal\stwhiteboard\paintlearn\debug\paintlearn.tlog\link.write.1.tlog

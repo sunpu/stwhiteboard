@@ -115,15 +115,15 @@
     <CustomBuild Include="stwhiteboard.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="stwbscene.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stwbconst.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stwbpathitem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stwbscene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stwbtextitem.h">

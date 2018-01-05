@@ -5,7 +5,6 @@ using namespace tahiti;
 STWBNetworkClient::STWBNetworkClient(QObject * parent) : QObject(parent)
 {
 	m_tcpSocket = NULL;
-	//qRegisterMetaType<QVector<QPoint>>("QVector<QPoint>");
 }
 
 STWBNetworkClient::~STWBNetworkClient()
@@ -35,14 +34,13 @@ void STWBNetworkClient::sendMessage(QString msg)
 {
 	m_tcpSocket->write("#*#");
 	m_tcpSocket->write(msg.toUtf8());
+	m_tcpSocket->write("@%@");
 }
 
-void STWBNetworkClient::readMessage()
+void STWBNetworkClient::processMessage(QString message)
 {
-	QByteArray data = m_tcpSocket->readAll();
-
 	QJsonParseError complexJsonError;
-	QJsonDocument complexParseDoucment = QJsonDocument::fromJson(data, &complexJsonError);
+	QJsonDocument complexParseDoucment = QJsonDocument::fromJson(message.toLatin1(), &complexJsonError);
 	if (complexJsonError.error == QJsonParseError::NoError && complexParseDoucment.isObject())
 	{
 		QJsonObject jsonObject = complexParseDoucment.object();
@@ -52,6 +50,7 @@ void STWBNetworkClient::readMessage()
 		QString subtype;
 		QJsonObject dataObject;
 		int itemID;
+		QList<int> itemIDs;
 		// 先获得通用字段
 		if (jsonObject.contains("type"))
 		{
@@ -85,6 +84,21 @@ void STWBNetworkClient::readMessage()
 				itemID = value.toDouble();
 			}
 		}
+		if (jsonObject.contains("itemIDs"))
+		{
+			value = jsonObject.take("itemIDs");
+			if (value.isArray())
+			{
+				QJsonArray itemArray = value.toArray();
+				for (int i = 0; i < itemArray.size(); i++)
+				{
+					if (itemArray.at(i).isDouble())
+					{
+						itemIDs.append(itemArray.at(i).toDouble());
+					}
+				}
+			}
+		}
 		// 根据分支处理
 		if (type == "setClientAuthority")
 		{
@@ -95,7 +109,7 @@ void STWBNetworkClient::readMessage()
 				if (value.isString())
 				{
 					editable = value.toString();
-					// TODO
+					Q_EMIT editableAuthority(editable);
 				}
 			}
 		}
@@ -135,7 +149,7 @@ void STWBNetworkClient::readMessage()
 							if (value.isArray())
 							{
 								QJsonArray points = value.toArray();
-								for (int i = 0; i < points.size(); i+=2)
+								for (int i = 0; i < points.size(); i += 2)
 								{
 									if (points.at(i).isDouble() && points.at(i + 1).isDouble())
 									{
@@ -145,7 +159,7 @@ void STWBNetworkClient::readMessage()
 								}
 							}
 						}
-						// TODO
+						Q_EMIT drawRemoteRealtimePen(color, thickness, pointsList);
 					}
 				}
 			}
@@ -191,7 +205,7 @@ void STWBNetworkClient::readMessage()
 						if (value.isArray())
 						{
 							QJsonArray points = value.toArray();
-							for (int i = 0; i < points.size(); i++)
+							for (int i = 0; i < points.size(); i += 2)
 							{
 								if (points.at(i).isDouble() && points.at(i + 1).isDouble())
 								{
@@ -201,8 +215,7 @@ void STWBNetworkClient::readMessage()
 							}
 						}
 					}
-					// TODO
-					//Q_EMIT drawPenItem(color, thickness, pointsList);
+					Q_EMIT drawRemotePenItem(color, thickness, pointsList, itemID);
 				}
 				else if (action == "text")
 				{
@@ -249,21 +262,71 @@ void STWBNetworkClient::readMessage()
 							{
 								y = posArray.at(1).toDouble();
 							}
-							// TODO
 						}
 					}
+					Q_EMIT drawRemoteTextItem(color, size, content, QPoint(x, y), itemID);
 				}
 
 			}
-			else if (subtype == "delItem")
+			else if (subtype == "delItems")
 			{
-				// TODO
+				Q_EMIT deleteRemoteItems(itemIDs);
+			}
+			else if (subtype == "moveItem")
+			{
+				int x = 0;
+				int y = 0;
+				if (dataObject.contains("pos"))
+				{
+					value = dataObject.take("pos");
+					if (value.isArray())
+					{
+						QJsonArray posArray = value.toArray();
+						if (posArray.at(0).isDouble())
+						{
+							x = posArray.at(0).toDouble();
+						}
+						if (posArray.at(1).isDouble())
+						{
+							y = posArray.at(1).toDouble();
+						}
+					}
+				}
+				Q_EMIT moveRemoteItems(QPoint(x, y), itemID);
 			}
 		}
 	}
 	else
 	{
-		printf("error data");
+		printf("error data\n%s", message.toStdString().c_str());
+	}
+}
+
+void STWBNetworkClient::readMessage()
+{
+	QString data = m_tcpSocket->readAll();
+
+	if (data.endsWith("@%@"))
+	{
+		if (m_bigData.size() > 0)
+		{
+			data = m_bigData + data;
+			m_bigData.clear();
+		}
+		data.replace("@%@", "");
+		QStringList datas = data.split("#*#");
+		for (int i = 0; i < datas.size(); i++)
+		{
+			if (datas[i].size() == 0)
+			{
+				continue;
+			}
+			processMessage(datas[i]);
+		}
+	}
+	else
+	{
+		m_bigData = m_bigData + data;
 	}
 }
 
@@ -372,7 +435,7 @@ void STWBNetworkClient::drawRealtimePenItem(QString penColor, int penThickness, 
 	sendMessage(complexJsonStr);
 }
 
-void STWBNetworkClient::drawPenItem(int itemID, QString penColor, int penThickness, QVector<QPoint> points)
+void STWBNetworkClient::drawPenItem(QString penColor, int penThickness, QVector<QPoint> points, int itemID)
 {
 	// {"type":"finish", "subtype":"addItem",
 	// "data":{"action":"pen", "color":"#000000", "thickness":12, "points":[12,23,12,34]}, "itemID":0}
@@ -404,8 +467,8 @@ void STWBNetworkClient::drawPenItem(int itemID, QString penColor, int penThickne
 	sendMessage(complexJsonStr);
 }
 
-void STWBNetworkClient::drawTextItem(int itemID,
-	QString textColor, int textSize, QString content, QPoint position)
+void STWBNetworkClient::drawTextItem(QString textColor, int textSize,
+	QString content, QPoint position, int itemID)
 {
 	// {"type":"finish", "subtype":"addItem",
 	// "data":{"action":"text", "color":"#000000", "size":12, "content":"aaa", "pos":[12, 23]}, "itemID":1}
@@ -435,13 +498,42 @@ void STWBNetworkClient::drawTextItem(int itemID,
 	sendMessage(complexJsonStr);
 }
 
-void STWBNetworkClient::deleteItem(int itemID)
+void STWBNetworkClient::moveItem(QPoint position, int itemID)
 {
-	// {"type":"finish", "subtype":"delItem", "itemID":1}
+	// {"type":"finish", "subtype":"moveItem", "data":{"pos":[2, 3]}, "itemID":1}
 	QJsonObject complexJson;
 	complexJson.insert("type", "finish");
-	complexJson.insert("subtype", "delItem");
+	complexJson.insert("subtype", "moveItem");
 	complexJson.insert("itemID", itemID);
+
+	QJsonObject dataJson;
+	QJsonArray posArray;
+	posArray.insert(0, position.x());
+	posArray.insert(1, position.y());
+	dataJson.insert("pos", posArray);
+	complexJson.insert("data", dataJson);
+
+	QJsonDocument complexDocument;
+	complexDocument.setObject(complexJson);
+	QByteArray complexByteArray = complexDocument.toJson(QJsonDocument::Compact);
+	QString complexJsonStr(complexByteArray);
+
+	sendMessage(complexJsonStr);
+}
+
+void STWBNetworkClient::deleteItems(QList<int> itemIDs)
+{
+	// {"type":"finish", "subtype":"delItems", "itemIDs":[1, 2, 3]}
+	QJsonObject complexJson;
+	complexJson.insert("type", "finish");
+	complexJson.insert("subtype", "delItems");
+
+	QJsonArray itemIDArray;
+	for (int i = 0; i < itemIDs.size(); i++)
+	{
+		itemIDArray.insert(i, itemIDs[i]);
+	}
+	complexJson.insert("itemIDs", itemIDArray);
 
 	QJsonDocument complexDocument;
 	complexDocument.setObject(complexJson);
@@ -454,15 +546,12 @@ void STWBNetworkClient::deleteItem(int itemID)
 void STWBNetworkClient::displayError(QAbstractSocket::SocketError e)
 {
 	printf("error:%d", e);
-//	Q_EMIT drawPenItem("123", 12, QVector<QPoint>());
-	//Q_EMIT drawPenItem1();
-	//Q_EMIT onConnect();
 }
 
 void STWBNetworkClient::connectUpdate()
 {
 	printf("connected");
-	//Q_EMIT onConnect();
+	Q_EMIT onConnect();
 }
 
 void STWBNetworkClient::disconnectUpdate()

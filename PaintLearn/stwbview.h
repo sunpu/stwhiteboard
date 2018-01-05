@@ -26,6 +26,11 @@ namespace tahiti
 		void setTextSize(int size);
 		void deleteSelectedItem();
 		void clearSelection();
+		void drawRemoteRealtimePen(QString color, int thickness, QVector<QPoint> points);
+		void drawRemotePenItem(QString color, int thickness, QVector<QPoint> points, int itemID);
+		void drawRemoteTextItem(QString color, int size, QString content, QPoint pos, int itemID);
+		void moveRemoteItems(QPoint pos, int itemID);
+		void deleteRemoteItems(QList<int> itemIDs);
 	protected:
 		void resizeEvent(QResizeEvent* event);
 	Q_SIGNALS:
