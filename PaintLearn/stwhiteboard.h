@@ -8,6 +8,7 @@
 #include "stwbview.h"
 #include "stwbvtoolbar.h"
 #include "stwbnetworkclient.h"
+#include "stwbdocwindow.h"
 
 namespace tahiti
 {

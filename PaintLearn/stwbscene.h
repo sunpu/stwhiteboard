@@ -7,6 +7,13 @@
 #include <QMap>
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsWidget>
+#include <QGraphicsGridLayout>
+#include <QGraphicsProxyWidget>
+#include <QLabel>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QPushButton>
 #include "stwbpathitem.h"
 #include "stwbtextitem.h"
 #include "stwbnetworkclient.h"

@@ -111,6 +111,79 @@ void STWBScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 	}
 	else if (m_type == STWBActionType::Text)
 	{
+		/*QGraphicsPixmapItem* pixmapitem = new QGraphicsPixmapItem();
+		pixmapitem->setFlag(QGraphicsItem::ItemIsMovable, true);
+		pixmapitem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+		QImage* image = new QImage(":/PaintLearn/Resources/4.png");
+		pixmapitem->setPixmap(QPixmap::fromImage(*image).scaled(80, 80));
+		pixmapitem->setPos(event->scenePos().toPoint());
+		pixmapitem->setSelected(true);
+		pixmapitem->setFocus();
+		QGraphicsScene::addItem(pixmapitem);*/
+
+
+		// 创建 widget
+		/*QLabel *pPixmapLabel = new QLabel();
+		QLineEdit *pAccountLineEdit = new QLineEdit();
+		QLineEdit *pPasswdLineEdit = new QLineEdit();
+		QCheckBox *pRememberCheckBox = new QCheckBox();
+		QCheckBox *pAutoLoginCheckBox = new QCheckBox();
+		QPushButton *pLoginButton = new QPushButton();
+		QPushButton *pRegisterButton = new QPushButton();
+		QPushButton *pForgotButton = new QPushButton();
+
+		pPixmapLabel->setStyleSheet("border-image: url(:/Images/logo); min-width:90px; min-height:90px; border-radius:45px; background:transparent;");
+		pAccountLineEdit->setPlaceholderText(QStringLiteral("QQ号码/手机/邮箱"));
+		pPasswdLineEdit->setPlaceholderText(QStringLiteral("密码"));
+		pPasswdLineEdit->setEchoMode(QLineEdit::Password);
+		pRememberCheckBox->setText(QStringLiteral("记住密码"));
+		pAutoLoginCheckBox->setText(QStringLiteral("自动登录"));
+		pLoginButton->setText(QStringLiteral("登录"));
+		pRegisterButton->setText(QStringLiteral("注册账号"));
+		pForgotButton->setText(QStringLiteral("找回密码"));
+
+		pLoginButton->setFixedHeight(30);
+		pAccountLineEdit->setFixedWidth(180);
+
+		// 添加 widget
+		QGraphicsScene *pScene = new QGraphicsScene();
+		QGraphicsProxyWidget *pPixmapWidget = pScene->addWidget(pPixmapLabel);
+		QGraphicsProxyWidget *pAccountWidget = pScene->addWidget(pAccountLineEdit);
+		QGraphicsProxyWidget *pPasswdWidget = pScene->addWidget(pPasswdLineEdit);
+		QGraphicsProxyWidget *pRememberWidget = pScene->addWidget(pRememberCheckBox);
+		QGraphicsProxyWidget *pAutoLoginWidget = pScene->addWidget(pAutoLoginCheckBox);
+		QGraphicsProxyWidget *pLoginWidget = pScene->addWidget(pLoginButton);
+		QGraphicsProxyWidget *pRegisterWidget = pScene->addWidget(pRegisterButton);
+		QGraphicsProxyWidget *pForgotWidget = pScene->addWidget(pForgotButton);
+
+		// 添加至网格布局中
+		QGraphicsGridLayout *pLayout = new QGraphicsGridLayout();
+		//QGraphicsLayoutItem* item = (QGraphicsLayoutItem*)pPixmapWidget;
+		pLayout->addItem(pPixmapWidget, 0, 0, 3, 1);
+		pLayout->addItem(pAccountWidget, 0, 1, 1, 2);
+		pLayout->addItem(pRegisterWidget, 0, 4);
+		pLayout->addItem(pPasswdWidget, 1, 1, 1, 2);
+		pLayout->addItem(pForgotWidget, 1, 4);
+		pLayout->addItem(pRememberWidget, 2, 1, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
+		pLayout->addItem(pAutoLoginWidget, 2, 2, 1, 1, Qt::AlignRight | Qt::AlignVCenter);
+		pLayout->addItem(pLoginWidget, 3, 1, 1, 2);
+		pLayout->setHorizontalSpacing(10);
+		pLayout->setVerticalSpacing(10);
+		pLayout->setContentsMargins(10, 10, 10, 10);
+
+		QGraphicsWidget *pWidget = new QGraphicsWidget();
+		pWidget->setFlag(QGraphicsItem::ItemIsMovable, true);
+		pWidget->setFlag(QGraphicsItem::ItemIsSelectable, true);
+		pWidget->setLayout(pLayout);
+		QGraphicsScene::addItem(pWidget);
+		return;*/
+
+
+
+
+
+
+
 		if (m_textItem != NULL)
 		{
 			m_last_textItem = m_textItem;

@@ -86,6 +86,15 @@
     <ClCompile Include="stwhiteboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="stwbdocwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_stwbdocwindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_stwbdocwindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="paintlearn.qrc">
@@ -118,6 +127,12 @@
     <CustomBuild Include="stwbscene.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="stwbdocwindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="STWBDocWindow.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stwbconst.h">
@@ -139,6 +154,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_STWhiteBoard.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_STWBDocWindow.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

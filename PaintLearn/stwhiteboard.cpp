@@ -56,6 +56,13 @@ STWhiteBoard::STWhiteBoard(QWidget *parent)
 	m_penStylePanel->init();
 	m_textStylePanel->init();
 	m_vtoolbar->init();
+
+
+	STWBDocWindow* docWindow = new STWBDocWindow(this);
+	int xx = 200;
+	int yy = geometry().height() / 2;
+	docWindow->show();
+	docWindow->move(QPoint(xx, yy));
 }
 
 STWhiteBoard::~STWhiteBoard()
